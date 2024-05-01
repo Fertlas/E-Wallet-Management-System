@@ -57,7 +57,7 @@ void main() {
     }
   }
 
-  // Transaction functions
+  // User functions
 
   void topup(String type, double amount, String user) {
     // If type is 'Credit', add 0.5 cashback

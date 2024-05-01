@@ -93,6 +93,24 @@ void main() {
     ));
   }
 
+  // Admin functions
+
+  void editTransaction(int index, String description, double amount,
+      DateTime date, double? discount, double? cashback, String user) {
+    transactions[index] = Transaction(
+      description: description,
+      amount: amount,
+      date: date,
+      discount: discount,
+      cashback: cashback,
+      user: user,
+    );
+  }
+
+  void deleteTransaction(int index) {
+    transactions.removeAt(index);
+  }
+
   dynamic getUserTransactions(String user) {
     var userTransactions = transactions.where((t) => t.user == user).toList();
     // Calculate balance for each transaction

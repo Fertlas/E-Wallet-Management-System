@@ -57,7 +57,7 @@ void main() {
     }
   }
 
-  // Transaction functions
+  // User functions
 
   void topup(String type, double amount, String user) {
     // If type is 'Credit', add 0.5 cashback
@@ -114,6 +114,28 @@ void main() {
       });
     }
     return calculatedTransactions;
+  }
+
+  // Admin functions
+
+  void editTransaction(int index, String description, double amount,
+      DateTime date, double? discount, double? cashback, String user) {
+    transactions[index] = Transaction(
+      description: description,
+      amount: amount,
+      date: date,
+      discount: discount,
+      cashback: cashback,
+      user: user,
+    );
+  }
+
+  void deleteTransaction(int index) {
+    transactions.removeAt(index);
+  }
+
+  dynamic getAllTransactions() {
+    return transactions;
   }
 
   button.onClick.listen((event) {

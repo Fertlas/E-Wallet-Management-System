@@ -117,14 +117,14 @@ void main() {
   }
 
   button.onClick.listen((event) {
-    topup('Credit', 500, 'John Doe');
-    pay('Groceries', 50, 'John Doe');
-    pay('Toll', 30, 'John Doe');
-    pay('Gas', 30, 'John Doe');
-    topup('Cash', 80, 'John Doe');
-    pay('Groceries', 10, 'John Doe');
-    pay('Toll', 10, 'John Doe');
-    pay('Gas', 10, 'John Doe');
-    getUserTransactions('John Doe');
+    topup('Credit', 500, 'JohnDoe');
+    pay('Groceries', 50, 'JohnDoe');
+    pay('Toll', 30, 'JohnDoe');
+    pay('Gas', 30, 'JohnDoe');
+    topup('Cash', 80, 'JohnDoe');
+    pay('Groceries', 10, 'JohnDoe');
+    pay('Toll', 10, 'JohnDoe');
+    pay('Gas', 10, 'JohnDoe');
+    getUserTransactions('JohnDoe');
   });
 }

@@ -1,8 +1,12 @@
 import 'dart:html';
+import './../../main.dart';
+import 'dart:convert' as convert;
 
 void main() {
+  final user = window.localStorage['loggedInUser'];
   handleDialog();
   handleFormSubmission();
+  getTransaction(user);
 }
 
 void handleDialog() {
@@ -33,4 +37,19 @@ void handleFormSubmission() {
     String? amount = amountInput.value;
     print('Type: $type, Price: $amount');
   });
+}
+
+void getTransaction(String? user) {}
+
+void loadTransactions() {
+  final data = window.localStorage['transactions'];
+  final calculatedTransactions;
+  if (data != null) {
+    final decoded = convert.jsonDecode(data) as List<dynamic>;
+    calculatedTransactions = decoded
+        .cast<Map<String, dynamic>>(); // Cast to List<Map<String, dynamic>>
+  } else {
+    calculatedTransactions =
+        []; // Initialize with an empty list if no data exists
+  }
 }

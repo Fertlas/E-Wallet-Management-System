@@ -1,5 +1,4 @@
 import 'dart:html';
-import 'dart:js';
 import 'package:web/helpers.dart';
 
 class User {

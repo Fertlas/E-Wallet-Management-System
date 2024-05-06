@@ -1,56 +1,40 @@
+import 'dart:convert';
 import 'dart:html';
-import '../../transaction.dart';
+import 'sign_out.dart';
+import 'dialog.dart';
 import 'package:web/helpers.dart';
+import '../../transaction.dart';
 
-class Dialog {
-  static final DialogElement dialog =
-      querySelector('#transaction-dialog') as DialogElement;
-
-  static void handleDialog() {
-    final ButtonElement newTransc =
-        querySelector('#new-transaction') as ButtonElement;
-
-    final ButtonElement cancelButton =
-        querySelector('#cancel-button') as ButtonElement;
-
-    newTransc.onClick.listen((event) {
-      dialog.showModal();
-    });
-
-    cancelButton.onClick.listen((event) {
-      dialog.close();
-    });
+void main() {
+  final user = window.localStorage['loggedInUser'];
+  if (user == null) {
+    window.location.href = '/user/login/user-login.html';
   }
 
-  static void handleFormSubmission(String? user) {
-    final FormElement form = querySelector('#add-transaction') as FormElement;
-    final InputElement typeInput = querySelector('#type') as InputElement;
-    final InputElement amountInput = querySelector('#amount') as InputElement;
+  //sign out
+  final ButtonElement signOut = querySelector('#sign-out') as ButtonElement;
+  SignOut.signOut(signOut);
 
-    form.onSubmit.listen((event) {
-      event.preventDefault();
-      String type = typeInput.value.toString();
-      double amount = double.parse(amountInput.value.toString());
-      Transaction.pay(type, amount, user as String);
-      Transaction.save();
-      Transaction.saveCalculatedTransactions(user);
-      print('Type: $type, Price: $amount');
-      dialog.close();
-      var calculatedTransactions = <dynamic>[];
-      calculatedTransactions = Transaction.getUserTransactions(user);
-      updateDesign(calculatedTransactions);
-      updateBalanceDisplay(calculatedTransactions);
-    });
-  }
+  //new transaction dialog
+  Dialog.handleDialog();
+  Dialog.handleFormSubmission(user);
 
-  static void updateDesign(List<dynamic> transacts) {
-    if (transacts.isEmpty) {
-      return;
-    }
+  Transaction.fakeTransaction(user);
 
-    var table = querySelector('#transaction-table-body');
-    var transaction = transacts.last; // Get the last transaction
+  var transact = window.localStorage['transactions'];
+  var jsonDecoded = jsonDecode(transact!) as List<dynamic>;
+  print('test : $jsonDecoded');
 
+  var calculatedTransactions = <dynamic>[];
+  calculatedTransactions = Transaction.getUserTransactions(user);
+
+  tableDesign(calculatedTransactions);
+  balanceDisplay(calculatedTransactions);
+}
+
+void tableDesign(List<dynamic> transacts) {
+  var table = querySelector('#transaction-table-body');
+  for (var transaction in transacts) {
     final tableRow = document.createElement('tr');
 
     final amountCell = document.createElement('td');
@@ -142,11 +126,11 @@ class Dialog {
 
     table!.appendChild(tableRow);
   }
+}
 
-  static void updateBalanceDisplay(List<dynamic> transacts) {
-    var currentBalance = transacts.last['balance'];
-    var balanceDisplay = querySelector('#balance-placeholder');
-    // ignore: prefer_interpolation_to_compose_strings
-    balanceDisplay!.text = 'MYR ' + currentBalance.toStringAsFixed(2);
-  }
+void balanceDisplay(List<dynamic> transacts) {
+  var currentBalance = transacts.last['balance'];
+  var balanceDisplay = querySelector('#balance-placeholder');
+  // ignore: prefer_interpolation_to_compose_strings
+  balanceDisplay!.text = 'MYR ' + currentBalance.toStringAsFixed(2);
 }

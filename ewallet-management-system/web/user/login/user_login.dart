@@ -1,5 +1,4 @@
 import 'dart:html';
-
 import 'package:web/helpers.dart';
 
 class User {
@@ -13,13 +12,15 @@ List<User> registeredUsers = [
   User('ali', 'ali123'),
   User('abu', 'abu123'),
   User('ahlong', 'ahlong123'),
+  User('JohnDoe', 'john123'),
 ];
 
 Future<bool> login(String? username, String? password) async {
   await Future.delayed(Duration(seconds: 1));
   for (var user in registeredUsers) {
     if (user.username == username && user.password == password) {
-      print('Logged in: ${user.username}');
+      window.localStorage['loggedInUser'] = username!;
+      window.alert('Logged in: ${user.username}');
       window.location.href = '/user/dashboard/dashboard.html';
       return true;
     }
@@ -29,6 +30,12 @@ Future<bool> login(String? username, String? password) async {
 }
 
 Future<void> main() async {
+  if (window.localStorage['loggedInUser'] != null) {
+    final user = window.localStorage['loggedInUser'];
+    window.alert('Welcome back, $user');
+    window.location.href = '/user/dashboard/dashboard.html';
+  }
+
   document.getElementById('login')!.onSubmit.listen((event) async {
     event.preventDefault();
     final username =

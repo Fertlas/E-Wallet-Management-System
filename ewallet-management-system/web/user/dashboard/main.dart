@@ -30,6 +30,7 @@ void main() {
 
   tableDesign(jsonDecodedCalc);
   balanceDisplay(jsonDecodedCalc);
+  Transaction.monthlyTransc();
 }
 
 void tableDesign(List<dynamic> transacts) {
@@ -133,4 +134,14 @@ void balanceDisplay(List<dynamic> transacts) {
   var balanceDisplay = querySelector('#balance-placeholder');
   // ignore: prefer_interpolation_to_compose_strings
   balanceDisplay!.text = 'MYR ' + currentBalance.toStringAsFixed(2);
+}
+
+void monthlyTransc() {
+  final user = window.localStorage['loggedInUser'];
+  var monthlyExpense = querySelector('#monthly-expenses');
+  var monthlyTopup = querySelector('#monthly-topup');
+  monthlyExpense!.text =
+      Transaction.calculateMonthlyExpense(user).toStringAsFixed(2);
+  monthlyTopup!.text =
+      Transaction.calculateMonthlyTopup(user).toStringAsFixed(2);
 }

@@ -28,7 +28,6 @@
             </div>
             <nav class="md:flex md:gap-x-11 md:text-sm md:font-semibold md:leading-6 md:text-gray-700">
                 <a href="#">Home</a>
-                <a href="#">Monthly Statement</a>
             </nav>
             <div class="flex flex-1 items-center justify-end gap-x-8">
                 <button id="sign-out" type="button"
@@ -86,17 +85,17 @@
                 <dl class="mx-auto grid max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:px-2 xl:px-0">
                     <div
                         class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8">
-                        <dt class="text-sm font-medium leading-6 text-green-500">Income(For cosmetic purpose)</dt>
-                        <dd class="text-xs font-medium text-gray-700">+4.75%</dd>
-                        <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
-                            MYR405,091.00</dd>
+                        <dt class="text-sm font-medium leading-6 text-green-500">Monthly Topup</dt>
+                        <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900"
+                            id="monthly-topup">
+                            MYR0</dd>
                     </div>
                     <div
                         class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 sm:border-l">
-                        <dt class="text-sm font-medium leading-6 text-red-500">Expenses</dt>
-                        <dd class="text-xs font-medium text-rose-600">-54.02%</dd>
-                        <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
-                            MYR12,787.00</dd>
+                        <dt class="text-sm font-medium leading-6 text-red-500">Monthly Expenses</dt>
+                        <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900"
+                            id="monthly-expenses">
+                            MYR0</dd>
                     </div>
                     <div
                         class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 lg:border-l">
@@ -109,7 +108,7 @@
                         class="flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8 sm:border-l">
                         <dt class="text-sm font-medium leading-6 text-orange-500">Balance</dt>
                         <dd class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900"
-                            id="balance-placeholder">
+                            id="balance-placeholder">MYR0
                         </dd>
                     </div>
                 </dl>

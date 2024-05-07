@@ -1,59 +1,41 @@
+import 'dart:convert';
 import 'dart:html';
-import '../../transaction.dart';
 import 'package:web/helpers.dart';
+import '../../transaction.dart';
+import 'dialog_admin.dart';
+import 'dart:js_interop';
 
-class TopupDialog {
-  static final DialogElement dialog =
-      querySelector('#topup-dialog') as DialogElement;
+void main() {
+  //new transaction dialog
+  // Dialog.handleDialog();
+  tableBaru();
+}
 
-  static void handleDialog() {
-    final ButtonElement newTransc =
-        querySelector('#topup-balance') as ButtonElement;
-
-    final ButtonElement cancelButton =
-        querySelector('#cancel-button-topup') as ButtonElement;
-
-    newTransc.onClick.listen((event) {
-      dialog.showModal();
-    });
-
-    cancelButton.onClick.listen((event) {
-      dialog.close();
-    });
-  } 
-
-  static void handleFormSubmission(String? user) {
-    final FormElement form = querySelector('#add-topup') as FormElement;
-    final SelectElement typeInput =
-        querySelector('#topup-method') as SelectElement;
-    final InputElement amountInput =
-        querySelector('#topup-amount') as InputElement;
-
-    form.onSubmit.listen((event) {
-      event.preventDefault();
-      String type = typeInput.value.toString();
-      double amount = double.parse(amountInput.value.toString());
-      Transaction.topup(type, amount, user as String);
-
-      dialog.close();
-      var calculatedTransactions = <dynamic>[];
-      calculatedTransactions = Transaction.getUserTransactions(user);
-      updateDesign(calculatedTransactions);
-      updateBalanceDisplay(calculatedTransactions);
-      Transaction.monthlyTransc();
-      print("Topup should be successful");
-    });
-  }
-
-  static void updateDesign(List<dynamic> transacts) {
-    if (transacts.isEmpty) {
-      return;
-    }
-
-    var table = querySelector('#transaction-table-body');
-    var transaction = transacts.last; // Get the last transaction
-
+void tableBaru (){
+  var table = querySelector('#makanan');
+  var test = <dynamic>[];
+  test = Transaction.getAllTransactions();
+  var allTransactions = window.localStorage['allTransactions'];
+  var jsonDecodedTransc = jsonDecode(allTransactions!) as List<dynamic>;
+  var i = 0;
+  for (var transaction in jsonDecodedTransc) {
     final tableRow = document.createElement('tr');
+    tableRow.id = 'tableRow$i';
+
+    final userCell = document.createElement('td');
+    const userCommonStyle = [
+      "ml-4",
+      "whitespace-nowrap",
+      "py-4",
+      "pl-4",
+      "pr-3",
+      "text-sm",
+      "font-medium",
+      "text-gray-900",
+      "sm:pl-6"
+    ];
+    userCell.text = transaction['user'];
+    tableRow.appendChild(userCell);
 
     final amountCell = document.createElement('td');
     const commonStyle = [
@@ -142,13 +124,31 @@ class TopupDialog {
     balanceCell.textContent = transaction['balance'].toStringAsFixed(2);
     tableRow.appendChild(balanceCell);
 
-    table!.appendChild(tableRow);
-  }
 
-  static void updateBalanceDisplay(List<dynamic> transacts) {
-    var currentBalance = transacts.last['balance'];
-    var balanceDisplay = querySelector('#balance-placeholder');
-    // ignore: prefer_interpolation_to_compose_strings
-    balanceDisplay!.text = 'MYR ' + currentBalance.toStringAsFixed(2);
+    final buttonCell = document.createElement('td');
+
+    // Edit
+    final editButton = document.createElement('button');
+    editButton.text = 'Edit';
+    editButton.onClick.listen((event) {
+      editButton.text = 'Edited';
+    });
+
+    // Delete
+    final deleteButton = document.createElement('button');
+    deleteButton.text = 'Delete';
+    deleteButton.onClick.listen((event) {
+      deleteButton.text = '$i';
+      // Transaction.deleteTransaction(i);
+      // print(Transaction.getAllTransactions());
+    });
+
+    buttonCell.appendChild(editButton);
+    buttonCell.appendChild(deleteButton);
+    tableRow.appendChild(buttonCell);
+
+
+    table!.appendChild(tableRow);
+    i++;
   }
 }

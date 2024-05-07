@@ -1,40 +1,57 @@
-import 'dart:convert';
 import 'dart:html';
-import 'sign_out.dart';
-import 'dialog.dart';
-import 'package:web/helpers.dart';
 import '../../transaction.dart';
-import 'topup_dialog.dart';
+import 'package:web/helpers.dart';
 
-void main() {
-  final user = window.localStorage['loggedInUser'];
-  if (user == null) {
-    window.location.href = '/user/login/user-login.html';
+class TopupDialog {
+  static final DialogElement dialog =
+      querySelector('#topup-dialog') as DialogElement;
+
+  static void handleDialog() {
+    final ButtonElement newTransc =
+        querySelector('#topup-balance') as ButtonElement;
+
+    final ButtonElement cancelButton =
+        querySelector('#cancel-button-topup') as ButtonElement;
+
+    newTransc.onClick.listen((event) {
+      dialog.showModal();
+    });
+
+    cancelButton.onClick.listen((event) {
+      dialog.close();
+    });
   }
 
-  //sign out
-  final ButtonElement signOut = querySelector('#sign-out') as ButtonElement;
-  SignOut.signOut(signOut);
+  static void handleFormSubmission(String? user) {
+    final FormElement form = querySelector('#add-topup') as FormElement;
+    final SelectElement typeInput =
+        querySelector('#topup-method') as SelectElement;
+    final InputElement amountInput =
+        querySelector('#topup-amount') as InputElement;
 
-  //new transaction dialog
-  Dialog.handleDialog();
-  Dialog.handleFormSubmission(user);
+    form.onSubmit.listen((event) {
+      event.preventDefault();
+      String type = typeInput.value.toString();
+      double amount = double.parse(amountInput.value.toString());
+      Transaction.topup(type, amount, user as String);
 
-  TopupDialog.handleDialog();
-  TopupDialog.handleFormSubmission(user);
+      dialog.close();
+      var calculatedTransactions = <dynamic>[];
+      calculatedTransactions = Transaction.getUserTransactions(user);
+      updateDesign(calculatedTransactions);
+      updateBalanceDisplay(calculatedTransactions);
+      print("Topup should be successful");
+    });
+  }
 
-  var calculatedTransactions = <dynamic>[];
-  calculatedTransactions = Transaction.getUserTransactions(user);
-  var calc = window.localStorage['calculatedTransactions'];
-  var jsonDecodedCalc = jsonDecode(calc!) as List<dynamic>;
+  static void updateDesign(List<dynamic> transacts) {
+    if (transacts.isEmpty) {
+      return;
+    }
 
-  tableDesign(jsonDecodedCalc);
-  balanceDisplay(jsonDecodedCalc);
-}
+    var table = querySelector('#transaction-table-body');
+    var transaction = transacts.last; // Get the last transaction
 
-void tableDesign(List<dynamic> transacts) {
-  var table = querySelector('#transaction-table-body');
-  for (var transaction in transacts) {
     final tableRow = document.createElement('tr');
 
     final amountCell = document.createElement('td');
@@ -126,11 +143,11 @@ void tableDesign(List<dynamic> transacts) {
 
     table!.appendChild(tableRow);
   }
-}
 
-void balanceDisplay(List<dynamic> transacts) {
-  var currentBalance = transacts.last['balance'];
-  var balanceDisplay = querySelector('#balance-placeholder');
-  // ignore: prefer_interpolation_to_compose_strings
-  balanceDisplay!.text = 'MYR ' + currentBalance.toStringAsFixed(2);
+  static void updateBalanceDisplay(List<dynamic> transacts) {
+    var currentBalance = transacts.last['balance'];
+    var balanceDisplay = querySelector('#balance-placeholder');
+    // ignore: prefer_interpolation_to_compose_strings
+    balanceDisplay!.text = 'MYR ' + currentBalance.toStringAsFixed(2);
+  }
 }

@@ -24,7 +24,7 @@ class Dialog {
 
   static void handleFormSubmission(String? user) {
     final FormElement form = querySelector('#add-transaction') as FormElement;
-    final InputElement typeInput = querySelector('#type') as InputElement;
+    final SelectElement typeInput = querySelector('#type') as SelectElement;
     final InputElement amountInput = querySelector('#amount') as InputElement;
 
     form.onSubmit.listen((event) {
@@ -32,14 +32,13 @@ class Dialog {
       String type = typeInput.value.toString();
       double amount = double.parse(amountInput.value.toString());
       Transaction.pay(type, amount, user as String);
-      Transaction.save();
-      Transaction.saveCalculatedTransactions(user);
-      print('Type: $type, Price: $amount');
+
       dialog.close();
       var calculatedTransactions = <dynamic>[];
       calculatedTransactions = Transaction.getUserTransactions(user);
       updateDesign(calculatedTransactions);
       updateBalanceDisplay(calculatedTransactions);
+      print('Dialog calculatedTransactions: $calculatedTransactions');
     });
   }
 

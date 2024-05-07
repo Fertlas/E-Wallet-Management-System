@@ -20,6 +20,7 @@ void tableBaru (){
   var i = 0;
   for (var transaction in jsonDecodedTransc) {
     final tableRow = document.createElement('tr');
+    tableRow.id = 'tableRow$i';
 
     final userCell = document.createElement('td');
     const userCommonStyle = [
@@ -137,8 +138,9 @@ void tableBaru (){
     final deleteButton = document.createElement('button');
     deleteButton.text = 'Delete';
     deleteButton.onClick.listen((event) {
-      deleteButton.text = 'Deleted';
-      Transaction.deleteTransaction(i);
+      deleteButton.text = '$i';
+      // Transaction.deleteTransaction(i);
+      // print(Transaction.getAllTransactions());
     });
 
     buttonCell.appendChild(editButton);

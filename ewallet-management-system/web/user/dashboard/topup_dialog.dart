@@ -20,7 +20,7 @@ class TopupDialog {
     cancelButton.onClick.listen((event) {
       dialog.close();
     });
-  }
+  } 
 
   static void handleFormSubmission(String? user) {
     final FormElement form = querySelector('#add-topup') as FormElement;

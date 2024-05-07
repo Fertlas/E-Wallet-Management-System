@@ -174,7 +174,7 @@ class Transaction {
     transactions.removeAt(index);
   }
 
-  dynamic getAllTransactions() {
+  static dynamic getAllTransactions() {
     return transactions;
   }
 }

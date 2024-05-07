@@ -60,8 +60,7 @@ class Transaction {
     // If type is 'Toll' and date is between 5pm and 8am, add 5% discount
     var discount = type == 'Groceries' ? amount * 0.1 : 0.0;
     if (type == 'Toll' &&
-        DateTime.now().hour >= 17 &&
-        DateTime.now().hour < 8) {
+        (DateTime.now().hour >= 17 || DateTime.now().hour < 8)) {
       discount = amount * 0.05;
     }
 
@@ -190,7 +189,7 @@ class Transaction {
   }
 
   // Admin functions
-  void editTransaction(int index, String description, double amount,
+  static void editTransaction(int index, String description, double amount,
       DateTime date, double? discount, double? cashback, String user) {
     transactions[index] = Transaction(
       description: description,
@@ -200,13 +199,15 @@ class Transaction {
       cashback: cashback,
       user: user,
     );
+    save();
   }
 
   static void deleteTransaction(int index) {
     transactions.removeAt(index);
+    save();
   }
 
-static dynamic getAllTransactions() {
+  static dynamic getAllTransactions() {
     var transact = window.localStorage['transactions'];
     if (transact == null) {
       return;
@@ -237,10 +238,10 @@ static dynamic getAllTransactions() {
     print("lmao");
     console.log(calculatedTransactions as JSAny?);
 
-    window.localStorage['allTransactions'] =
-        jsonEncode(calculatedTransactions);
+    window.localStorage['allTransactions'] = jsonEncode(calculatedTransactions);
     return calculatedTransactions;
   }
+
   static void monthlyTransc() {
     final user = window.localStorage['loggedInUser'];
     var monthlyExpense = querySelector('#monthly-expenses');

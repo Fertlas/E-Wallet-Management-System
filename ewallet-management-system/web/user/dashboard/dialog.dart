@@ -38,6 +38,7 @@ class Dialog {
       calculatedTransactions = Transaction.getUserTransactions(user);
       updateDesign(calculatedTransactions);
       updateBalanceDisplay(calculatedTransactions);
+      Transaction.monthlyTransc();
       print('Dialog calculatedTransactions: $calculatedTransactions');
     });
   }

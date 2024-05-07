@@ -40,6 +40,7 @@ class TopupDialog {
       calculatedTransactions = Transaction.getUserTransactions(user);
       updateDesign(calculatedTransactions);
       updateBalanceDisplay(calculatedTransactions);
+      Transaction.monthlyTransc();
       print("Topup should be successful");
     });
   }

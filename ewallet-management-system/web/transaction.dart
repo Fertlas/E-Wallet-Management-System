@@ -157,6 +157,38 @@ class Transaction {
     return data;
   }
 
+  // Method to calculate total topup for a specific month
+  static double calculateMonthlyTopup(String? user) {
+    DateTime now = DateTime.now();
+    int currentYear = now.year;
+    int currentMonth = now.month;
+
+    return transactions
+        .where((t) =>
+            t.user == user &&
+            t.description == 'Top up' &&
+            t.date.year == currentYear &&
+            t.date.month == currentMonth)
+        .map((t) => t.amount)
+        .reduce((value, element) => value + element);
+  }
+
+// Method to calculate total expense for a specific month
+  static double calculateMonthlyExpense(String? user) {
+    DateTime now = DateTime.now();
+    int currentYear = now.year;
+    int currentMonth = now.month;
+
+    return transactions
+        .where((t) =>
+            t.user == user &&
+            t.description == 'Pay' &&
+            t.date.year == currentYear &&
+            t.date.month == currentMonth)
+        .map((t) => t.amount)
+        .reduce((value, element) => value + element);
+  }
+
   // Admin functions
   void editTransaction(int index, String description, double amount,
       DateTime date, double? discount, double? cashback, String user) {
@@ -176,5 +208,15 @@ class Transaction {
 
   dynamic getAllTransactions() {
     return transactions;
+  }
+
+  static void monthlyTransc() {
+    final user = window.localStorage['loggedInUser'];
+    var monthlyExpense = querySelector('#monthly-expenses');
+    var monthlyTopup = querySelector('#monthly-topup');
+    monthlyExpense!.text =
+        'MYR ${calculateMonthlyExpense(user).toStringAsFixed(2)}';
+    monthlyTopup!.text =
+        'MYR ${calculateMonthlyTopup(user).toStringAsFixed(2)}';
   }
 }

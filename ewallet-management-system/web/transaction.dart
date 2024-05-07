@@ -60,8 +60,7 @@ class Transaction {
     // If type is 'Toll' and date is between 5pm and 8am, add 5% discount
     var discount = type == 'Groceries' ? amount * 0.1 : 0.0;
     if (type == 'Toll' &&
-        DateTime.now().hour >= 17 &&
-        DateTime.now().hour < 8) {
+        (DateTime.now().hour >= 17 || DateTime.now().hour < 8)) {
       discount = amount * 0.05;
     }
 
@@ -190,7 +189,7 @@ class Transaction {
   }
 
   // Admin functions
-  void editTransaction(int index, String description, double amount,
+  static void editTransaction(int index, String description, double amount,
       DateTime date, double? discount, double? cashback, String user) {
     transactions[index] = Transaction(
       description: description,
@@ -200,14 +199,47 @@ class Transaction {
       cashback: cashback,
       user: user,
     );
+    save();
   }
 
-  void deleteTransaction(int index) {
+  static void deleteTransaction(int index) {
     transactions.removeAt(index);
+    save();
   }
 
-  dynamic getAllTransactions() {
-    return transactions;
+  static dynamic getAllTransactions() {
+    var transact = window.localStorage['transactions'];
+    if (transact == null) {
+      return;
+    } else {
+      load();
+    }
+
+    console.log(transactions as JSAny?);
+    // Calculate balance for each transaction
+    var balance = 0.0;
+    var calculatedTransactions = <dynamic>[];
+    for (var transaction in transactions) {
+      balance += transaction.amount +
+          (transaction.cashback ?? 0) +
+          (transaction.discount ?? 0);
+      calculatedTransactions.add({
+        'description': transaction.description,
+        'amount': transaction.amount,
+        'date': transaction.date.toString(),
+        'type': transaction.type,
+        'discount': transaction.discount,
+        'cashback': transaction.cashback,
+        'user': transaction.user,
+        'balance': balance,
+      });
+    }
+
+    print("lmao");
+    console.log(calculatedTransactions as JSAny?);
+
+    window.localStorage['allTransactions'] = jsonEncode(calculatedTransactions);
+    return calculatedTransactions;
   }
 
   static void monthlyTransc() {
